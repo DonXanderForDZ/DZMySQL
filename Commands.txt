@@ -1,0 +1,295 @@
+-- Подготовка и заполнение таблиц
+
+create table countries (
+ id int unsigned not null auto_increment primary key,
+ name varchar(100) not null
+ );
+
+create table cities (
+ id int unsigned not null auto_increment primary key,
+ country_id INT unsigned,
+ name varchar(100) not null
+ );
+
+CREATE TABLE users (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone VARCHAR(100) NOT NULL UNIQUE,
+  city_id INT unsigned,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE profiles (
+  user_id INT UNSIGNED NOT NULL PRIMARY KEY, 
+  gender CHAR(1) NOT NULL,
+  birthday DATE,
+  city_id INT unsigned NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE hotels (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone VARCHAR(100) NOT NULL UNIQUE,
+  city_id INT unsigned NOT NULL,
+  address VARCHAR(100) not null,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE resorts (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL,
+  phone VARCHAR(100) NOT NULL,
+  city_id INT unsigned NOT NULL,
+  address VARCHAR(100) not null,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE apparts (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  owner_id INT UNSIGNED NOT NULL,
+  city_id INT unsigned NOT NULL,
+  address VARCHAR(100) not null,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE chalet (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  owner_id INT UNSIGNED NOT NULL,
+  city_id INT unsigned NOT NULL,
+  address VARCHAR(100) not null,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE owners (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+  first_name VARCHAR(100) NOT NULL,
+  last_name VARCHAR(100) NOT NULL,
+  email VARCHAR(100) NOT NULL UNIQUE,
+  phone VARCHAR(100) NOT NULL UNIQUE,
+  city_id INT unsigned NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+
+create table excursion (
+ id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ city_id INT unsigned NOT NULL,
+ email VARCHAR(100) NOT NULL,
+ phone VARCHAR(100) NOT NULL,
+ web_site VARCHAR(100),
+ address VARCHAR(100) not null,
+ created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+ updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+create table landmarks (
+ id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ city_id INT unsigned NOT NULL,
+ name varchar (100) not null,
+ address VARCHAR(100) not null
+);
+
+create table recreation (
+id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+ city_id INT unsigned NOT NULL,
+ name varchar (100) not null,
+ address VARCHAR(100) not null
+);
+
+CREATE TABLE media (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  city_id INT UNSIGNED NOT NULL,
+  user_id INT UNSIGNED,
+  owner_id int UNSIGNED,
+  filename VARCHAR(100) NOT NULL,
+  size INT NOT NULL,
+  metadata VARCHAR(100) NOT NULL,
+  media_type_id INT UNSIGNED NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+CREATE TABLE media_types (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL UNIQUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,  
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Настройка сгенерированных данных
+
+select * from cities limit 10;
+
+update cities set country_id = (floor(1+rand()*100));
+
+select * from users limit 10;
+
+update users set city_id = (floor(1+rand()*100));
+update users set updated_at = NOW() where updated_at < created_at;
+
+select * from profiles limit 10;
+
+create temporary table genders (name char(1));
+insert into genders values ('F'), ('M');
+update profiles set gender = (select name from genders order by rand() limit 1);
+update profiles set created_at = NOW() where birthday > created_at;
+update profiles set updated_at = created_at where birthday > updated_at;
+update profiles set updated_at = NOW() where updated_at < created_at;
+
+select * from hotels limit 10;
+
+update hotels set city_id = (floor(1+rand()*100));
+
+update hotels set updated_at = NOW() where updated_at < created_at;
+
+select * from resorts limit 10;
+
+update resorts set city_id = (floor(1+rand()*100));
+
+update resorts set updated_at = NOW() where updated_at < created_at;
+
+select * from apparts limit 10;
+
+update apparts set city_id = (floor(1+rand()*100));
+update apparts set owner_id = (floor(1+rand()*100));
+update apparts set updated_at = NOW() where updated_at < created_at;
+
+
+select * from chalet limit 10;
+
+update chalet set city_id = (floor(1+rand()*100));
+update chalet set owner_id = (floor(1+rand()*100));
+update chalet set updated_at = NOW() where updated_at < created_at;
+
+select * from owners limit 10;
+
+update owners set city_id = (floor(1+rand()*100));
+update owners set updated_at = NOW() where updated_at < created_at;
+
+select * from excursion limit 10;
+
+update excursion set city_id = (floor(1+rand()*100));
+update excursion set updated_at = NOW() where updated_at < created_at;
+
+select * from landmarks limit 10;
+
+update landmarks set city_id = (floor(1+rand()*100));
+
+select * from recreation limit 10;
+
+update recreation set city_id = (floor(1+rand()*100));
+
+select * from media;
+
+update media set city_id = (floor(1+rand()*100));
+update media set user_id = (floor(rand()*100));
+update media set owner_id = (floor(rand()*100));
+update media set user_id = 0 where owner_id > 0;
+update media set updated_at = NOW() where updated_at < created_at;
+update media set filename = concat('http://droppbox.net/booking.com/', filename);   
+update media set size = floor(10000+rand()*100000000) where size < 1000;
+
+update media set metadata = concat(
+  '{"owner":"',
+  (select concat(first_name, ' ', last_name)
+    from owners where owners.id = media.owner_id),
+    '"}') where owner_id > 0;
+update media set metadata = concat(
+  '{"owner":"',
+  (select concat(first_name, ' ', last_name)
+    from users where users.id = media.user_id),
+    '"}') where user_id > 0;   
+
+desc media;
+
+alter table media modify column metadata JSON;
+
+select * from media_types;
+
+delete from media_types;
+insert into media_types (name) values
+  ('photo'), ('video'), ('audio');
+ 
+truncate media_types;
+
+update media set media_type_id = floor(1+rand()*3);
+
+
+-- Связи между таблицами
+
+
+alter table cities 
+ add constraint cities_contries_id_fk
+  foreign key (country_id) references countries(id)
+   on delete set null;
+  
+alter table cities 
+ add constraint cities_contries_id_fk
+  foreign key (country_id) references countries(id)
+   on delete set null;
+  
+alter table hotels 
+ add constraint hotels_city_id_fk
+  foreign key (city_id) references cities(id);
+
+alter table resorts 
+ add constraint resorts_city_id_fk
+  foreign key (city_id) references cities(id); 
+ 
+alter table landmarks 
+ add constraint landmarks_city_id_fk
+  foreign key (city_id) references cities(id);
+ 
+alter table recreation 
+ add constraint recreation_city_id_fk
+  foreign key (city_id) references cities(id);
+
+alter table excursion 
+ add constraint excursion_city_id_fk
+  foreign key (city_id) references cities(id);
+ 
+ alter table apparts 
+ add constraint apparts_city_id_fk
+  foreign key (city_id) references cities(id);
+alter table apparts 
+ add constraint apparts_owner_id_fk
+  foreign key (owner_id) references owners(id);
+
+alter table chalet 
+ add constraint chalet_city_id_fk
+  foreign key (city_id) references cities(id);
+alter table chalet 
+ add constraint chalet_owner_id_fk
+  foreign key (owner_id) references owners(id);
+  
+alter table users 
+ add constraint users_city_id_fk
+   foreign key (city_id) references cities(id);
+-- город рождения пользователя, надо было более информативное название дать
+ 
+alter table profiles 
+ add constraint profiles_user_id_fk
+  foreign key (user_id) references users(id)
+   on delete cascade;
+alter table profiles 
+ add constraint profiles_city_id_fk
+  foreign key (city_id) references cities(id);
+ 
+alter table media 
+ add constraint media_media_type_id_fk
+  foreign key (media_type_id) references media_types(id);
+alter table media 
+ add constraint media_city_id_fk
+  foreign key (city_id) references cities(id);
